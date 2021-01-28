@@ -5,11 +5,14 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour
 {
     public float moveSpeed = 1f;
+    public Sprite[] sprites;
+
+    public SpriteRenderer renderer;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        renderer.sprite = sprites[Random.Range(0, sprites.Length)];
     }
 
     // Update is called once per frame
