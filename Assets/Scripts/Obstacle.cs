@@ -8,6 +8,7 @@ public class Obstacle : MonoBehaviour
     public Sprite[] sprites;
 
     public SpriteRenderer renderer;
+    public bool needsDuck = false;
 
     // Start is called before the first frame update
     void Start()

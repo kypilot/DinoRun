@@ -7,10 +7,14 @@ public class Player : MonoBehaviour
     public float jumpPower = 5;
     public Rigidbody2D rb;
     public AudioSource jumpSource;
+    public AudioSource bgmSource;
     public HUD hud;
+    public Animator animator;
 
     private bool isGrounded = true;
     private bool hasDoubleJumped = false;
+
+    private bool isDucking = false;
 
     private int score = 0;
 
@@ -26,8 +30,31 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.GetComponent<Obstacle>())
+        Obstacle obstacle = other.gameObject.GetComponent<Obstacle>();
+
+        if(obstacle)
         {
+            bool shouldLose = false;
+
+            if(obstacle.needsDuck == false)
+            {
+                shouldLose = true;
+            }
+            else if(obstacle.needsDuck == true && isDucking == false)
+            {
+                shouldLose = true;
+            }
+            else
+            {
+                shouldLose = false;
+            }
+
+            if(shouldLose == false)
+            {
+                return;
+            }
+
+            bgmSource.Pause();
             hud.ShowRestartButton(true);
             Time.timeScale = 0;
         }
@@ -43,6 +70,8 @@ public class Player : MonoBehaviour
         isGrounded = true;
         hasDoubleJumped = false;
     }
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -65,7 +94,20 @@ public class Player : MonoBehaviour
             }
         }
 
-        score++;
+        if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
+
+        {
+            animator.SetBool("Ducking", true);
+            isDucking = true;
+        }
+        else
+        {
+            animator.SetBool("Ducking", false);
+            isDucking = false;
+        }
+
+
+            score++;
 
         isGrounded = false;
     }
